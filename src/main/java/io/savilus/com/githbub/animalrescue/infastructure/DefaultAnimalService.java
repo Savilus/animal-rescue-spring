@@ -50,4 +50,10 @@ public class DefaultAnimalService implements AnimalService {
             }
         }
     }
+
+    @Override
+    public boolean deleteAnimal(String id) {
+        animals.remove(id);
+        return true;
+    }
 }

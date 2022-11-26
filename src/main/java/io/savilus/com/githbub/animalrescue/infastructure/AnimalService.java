@@ -11,6 +11,7 @@ public interface AnimalService {
 
     Animal singleAnimal(String id);
     Animal createAnimal(Specie specie, Integer age, String name);
+    boolean deleteAnimal(String id);
 
 
 }

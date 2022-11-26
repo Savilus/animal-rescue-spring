@@ -47,6 +47,12 @@ public class AnimalController {
         return ResponseEntity.created(URI.create("/animals")).body(animal);
     }
 
+    @DeleteMapping(path = "/animals/{id}")
+    public ResponseEntity<Animal> deleteAnimal(@PathVariable String id){
+        animalService.deleteAnimal(id);
+        return ResponseEntity.noContent().build();
+    }
+
     private Specie parseStringToSpecie(String rawSpecie){
         return Arrays.stream(Specie.values())
                 .filter(specie -> specie.getPluralValue().equals(rawSpecie))
