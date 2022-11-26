@@ -1,26 +1,17 @@
 package io.savilus.com.githbub.animalrescue.infastructure;
 
-import io.savilus.com.githbub.animalrescue.domain.Animal;
-import io.savilus.com.githbub.animalrescue.domain.Cat;
-import io.savilus.com.githbub.animalrescue.domain.Dog;
-import io.savilus.com.githbub.animalrescue.domain.Elephant;
+import io.savilus.com.githbub.animalrescue.domain.*;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class DefaultAnimalService implements AnimalService {
 
-    private final Map<String, Animal> animals = Map.of(
-            "1", new Dog("1", "krecik", 17),
-            "2", new Dog("2", "reksio", 12),
-            "3", new Dog("3", "nutka", 8),
-            "4", new Dog("4", "minutka", 9),
-            "5", new Cat("5", "mruczek", 10),
-            "6", new Elephant("6", "stefan", 78),
-            "7", new Cat("7","burek", 3));
-
+    private final Map<String, Animal> animals = new HashMap<>();
 
 
     @Override
@@ -31,5 +22,32 @@ public class DefaultAnimalService implements AnimalService {
     @Override
     public Animal singleAnimal(String id) {
         return animals.get(id);
+    }
+
+    @Override
+    public Animal createAnimal(Specie specie, Integer age, String name) {
+        // losowy generator, bardzo mała kolizyjność
+        UUID uuid = UUID.randomUUID();
+
+        switch (specie) {
+            case DOG -> {
+                Animal animal = new Dog(uuid.toString(),name, age);
+                animals.put(animal.getId(),animal);
+                return animal;
+            }
+            case CAT -> {
+                Animal animal = new Cat(uuid.toString(),name, age);
+                animals.put(animal.getId(),animal);
+                return animal;
+            }
+            case ELEPHANT -> {
+                Animal animal = new Elephant(uuid.toString(), name, age);
+                animals.put(animal.getId(),animal);
+                return animal;
+            }
+            default -> {
+                throw new IllegalStateException("Unsupported specie ");
+            }
+        }
     }
 }

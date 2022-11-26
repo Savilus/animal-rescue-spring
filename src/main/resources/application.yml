@@ -4,3 +4,8 @@ server:
 spring:
   main:
     banner-mode: off
+
+logging:
+  level:
+    web: debug
+    com.fasterxml.jackson: debug

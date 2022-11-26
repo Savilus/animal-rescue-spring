@@ -1,8 +1,11 @@
 package io.savilus.com.githbub.animalrescue.api;
 
 import io.savilus.com.githbub.animalrescue.api.dto.AllAnimalsResponse;
+import io.savilus.com.githbub.animalrescue.api.dto.CreateAnimalRequest;
 import io.savilus.com.githbub.animalrescue.api.dto.SingleAnimalResponse;
+import io.savilus.com.githbub.animalrescue.domain.Animal;
 import io.savilus.com.githbub.animalrescue.domain.Dog;
+import io.savilus.com.githbub.animalrescue.domain.Specie;
 import io.savilus.com.githbub.animalrescue.infastructure.AnimalService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.Arrays;
 
 // RestControler -> @Controller i @ResponseBody w jednym
 @Slf4j
@@ -35,11 +39,18 @@ public class AnimalController {
                 animalService.singleAnimal(id).getSpecie());
     }
 
-    @PostMapping(path = "/animals")
-    public ResponseEntity<Dog> addAnimal(@RequestBody Dog dog) {
-        log.info(dog.toString());
-        return ResponseEntity.created(URI.create("/animals")).build();
+    @PostMapping(path = "/animals/{specie}") // pobieramy z frontu i tworzymy zasoby
+    public ResponseEntity<Animal> addAnimal(@RequestBody CreateAnimalRequest request, @PathVariable String specie) {
+        log.info(request.toString());
+        log.info(specie);
+        Animal animal = animalService.createAnimal(parseStringToSpecie(specie), request.getAge(), request.getName());
+        return ResponseEntity.created(URI.create("/animals")).body(animal);
     }
 
+    private Specie parseStringToSpecie(String rawSpecie){
+        return Arrays.stream(Specie.values())
+                .filter(specie -> specie.getPluralValue().equals(rawSpecie))
+                .findFirst().get();
+    }
 }
 
