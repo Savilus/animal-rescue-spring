@@ -2,40 +2,43 @@ package io.savilus.com.githbub.animalrescue.api;
 
 import io.savilus.com.githbub.animalrescue.api.dto.AllAnimalsResponse;
 import io.savilus.com.githbub.animalrescue.api.dto.SingleAnimalResponse;
-import io.savilus.com.githbub.animalrescue.domain.Animal;
 import io.savilus.com.githbub.animalrescue.domain.Dog;
+import io.savilus.com.githbub.animalrescue.infastructure.AnimalService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.net.URI;
 
+// RestControler -> @Controller i @ResponseBody w jednym
 @Slf4j
 @AllArgsConstructor
 @RestController
 @RequestMapping
 public class AnimalController {
 
-    private final Map<String, Animal> animals = Map.of(
-            "1", new Dog("1","krecik", 17),
-            "2", new Dog("2","reksio", 12),
-            "3", new Dog("3","nutka", 8),
-            "4", new Dog("4","minutka", 9));
+    private final AnimalService animalService;
 
     @GetMapping(path = "/animals")
-    public AllAnimalsResponse getAnimals() {
-        AllAnimalsResponse animalResponse = new AllAnimalsResponse(animals.values().stream().toList());
-        return animalResponse;
+    public AllAnimalsResponse getAnimals(@RequestParam(required = false, defaultValue = "3") Integer limit) {
+        AllAnimalsResponse animalsResponse = new AllAnimalsResponse(
+                animalService.listOfAnimals(limit));
+        return animalsResponse;
     }
 
-    @GetMapping(path = "/animals/{name}")
-    public SingleAnimalResponse getById(@PathVariable String name) {
+    @GetMapping(path = "/animals/{id}")
+    public SingleAnimalResponse getById(@PathVariable String id) {
+        log.info(id);
         return new SingleAnimalResponse(
-                animals.get(name.toLowerCase()).getAge(),
-                animals.get(name.toLowerCase()).getSpecie());
+                animalService.singleAnimal(id).getAge(),
+                animalService.singleAnimal(id).getSpecie());
+    }
+
+    @PostMapping(path = "/animals")
+    public ResponseEntity<Dog> addAnimal(@RequestBody Dog dog) {
+        log.info(dog.toString());
+        return ResponseEntity.created(URI.create("/animals")).build();
     }
 
 }
