@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +19,9 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 // RestControler -> @Controller i @ResponseBody w jednym
 @Slf4j
@@ -65,12 +69,19 @@ public class AnimalController {
                 .filter(specie -> specie.getPluralValue().equals(rawSpecie))
                 .findFirst().get();
     }
-    // exception handler - wywołuje metode w przypadku wykrycia błedu
+    // exception handler - wywołuje metode w przypadku wykrycia błedu, jak poleci wyjątek i zwróci wartość jaką podam
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorDto> handleValidationException(MethodArgumentNotValidException exception){
-        log.info(exception.getBindingResult().toString());
-        return ResponseEntity.badRequest().body(new ErrorDto("", Instant.now(),HttpStatus.BAD_REQUEST));
+    public ResponseEntity<ErrorDto> handleValidationException(MethodArgumentNotValidException exception) {
+        Map<String, String> errorMap = new HashMap<>();
+        exception.getBindingResult().getAllErrors().
+                forEach(s -> errorMap.put(((FieldError) s).getField(), s.getDefaultMessage()));
+        String message = errorMap.entrySet()
+                .stream()
+                .map(entry -> entry.getKey() + ": " + entry.getValue())
+                .collect(Collectors.joining(", "));
+        return ResponseEntity.badRequest().body(new ErrorDto(message, Instant.now(), HttpStatus.BAD_REQUEST));
+
     }
 }
 
