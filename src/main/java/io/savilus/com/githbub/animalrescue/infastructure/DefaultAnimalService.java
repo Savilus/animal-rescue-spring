@@ -30,20 +30,28 @@ public class DefaultAnimalService implements AnimalService {
     }
 
     @Override
-    public Animal createAnimal(Specie specie, Integer age, String name) {
+    public Animal createAnimal(Specie specie, Integer age, String name, String id) {
         // losowy generator, bardzo mała kolizyjność
-        UUID uuid = UUID.randomUUID();
+
         Animal animal;
+        String animalId;
+
+        if(id == null){
+            animalId = UUID.randomUUID().toString();
+        } else{
+            animalId = id;
+        }
+
 
         switch (specie) {
             case DOG -> {
-                animal = new Dog(uuid.toString(), name, age);
+                animal = new Dog(animalId, name, age);
             }
             case CAT -> {
-                animal = new Cat(uuid.toString(), name, age);
+                animal = new Cat(animalId, name, age);
             }
             case ELEPHANT -> {
-                animal = new Elephant(uuid.toString(), name, age);
+                animal = new Elephant(animalId, name, age);
             }
             default -> {
                 throw new IllegalStateException("Unsupported specie ");
@@ -60,5 +68,10 @@ public class DefaultAnimalService implements AnimalService {
         animalsRepository.deleteAnimal(id);
         log.info("Deleting animal by ID {}", id);
         return true;
+    }
+
+    @Override
+    public boolean animalExist(String id) {
+        return animalsRepository.findAnimal(id) != null;
     }
 }

@@ -10,8 +10,9 @@ public interface AnimalService {
     List<Animal> listOfAnimals(Integer limit);
 
     Animal singleAnimal(String id);
-    Animal createAnimal(Specie specie, Integer age, String name);
+    Animal createAnimal(Specie specie, Integer age, String name, String id);
     boolean deleteAnimal(String id);
+    boolean animalExist(String id);
 
 
 }

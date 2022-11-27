@@ -54,8 +54,23 @@ public class AnimalController {
             @PathVariable String specie) {
         log.info(request.toString());
         log.info(specie);
-        Animal animal = animalService.createAnimal(parseStringToSpecie(specie), request.getAge(), request.getName());
+        Animal animal = animalService.createAnimal(parseStringToSpecie(specie), request.getAge(), request.getName(), null);
         return ResponseEntity.created(URI.create("/animals")).body(animal);
+    }
+
+    @PutMapping(path = "/animals/{specie}/{id}")
+    public ResponseEntity<Animal> upsertAnimal(
+            @PathVariable String id,
+            @PathVariable String specie,
+            @RequestBody CreateAnimalRequest createAnimalRequest){
+        log.info("Animal exist: {}", animalService.animalExist(id));
+        Animal animal = animalService.createAnimal((
+                parseStringToSpecie(specie)),
+                createAnimalRequest.getAge(),
+                createAnimalRequest.getName(),
+                id
+        );
+        return ResponseEntity.ok().body(animal);
     }
 
     @DeleteMapping(path = "/animals/{id}")
