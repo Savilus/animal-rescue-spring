@@ -62,6 +62,7 @@ public class AnimalController {
     public ResponseEntity<Animal> upsertAnimal(
             @PathVariable String id,
             @PathVariable String specie,
+            // sprawdza co przychodzi z requesta i tworzy na podstawie tego co mamy w body
             @RequestBody CreateAnimalRequest createAnimalRequest){
         log.info("Animal exist: {}", animalService.animalExist(id));
         Animal animal = animalService.createAnimal((

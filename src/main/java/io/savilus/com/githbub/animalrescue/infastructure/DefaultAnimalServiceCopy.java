@@ -11,12 +11,12 @@ import java.util.UUID;
 
 @Service
 @Slf4j
-@Profile(value = "default")
-public class DefaultAnimalService implements AnimalService {
+@Profile(value = "profileTwo")
+public class DefaultAnimalServiceCopy implements AnimalService {
 
     private final AnimalsRepository animalsRepository;
 
-    public DefaultAnimalService(AnimalsRepository animalsRepository) {
+    public DefaultAnimalServiceCopy(AnimalsRepository animalsRepository) {
         this.animalsRepository = animalsRepository;
     }
 
