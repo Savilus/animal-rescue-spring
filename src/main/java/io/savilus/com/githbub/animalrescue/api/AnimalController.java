@@ -2,6 +2,7 @@ package io.savilus.com.githbub.animalrescue.api;
 
 import io.savilus.com.githbub.animalrescue.api.dto.AllAnimalsResponse;
 import io.savilus.com.githbub.animalrescue.api.dto.CreateAnimalRequest;
+import io.savilus.com.githbub.animalrescue.api.dto.ErrorDto;
 import io.savilus.com.githbub.animalrescue.api.dto.SingleAnimalResponse;
 import io.savilus.com.githbub.animalrescue.domain.Animal;
 import io.savilus.com.githbub.animalrescue.domain.Specie;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.time.Instant;
 import java.util.Arrays;
 
 // RestControler -> @Controller i @ResponseBody w jednym
@@ -66,9 +68,9 @@ public class AnimalController {
     // exception handler - wywołuje metode w przypadku wykrycia błedu
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleValidationException(MethodArgumentNotValidException exception){
+    public ResponseEntity<ErrorDto> handleValidationException(MethodArgumentNotValidException exception){
         log.info(exception.getBindingResult().toString());
-        return ResponseEntity.badRequest().body("Wybuchło");
+        return ResponseEntity.badRequest().body(new ErrorDto("", Instant.now(),HttpStatus.BAD_REQUEST));
     }
 }
 
