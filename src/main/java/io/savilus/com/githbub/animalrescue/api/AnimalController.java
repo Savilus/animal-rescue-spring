@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -36,8 +37,12 @@ public class AnimalController {
     @GetMapping(path = "/animals")
     public ResponseEntity<Page<Animal>> getAnimals(@RequestParam(required = false, defaultValue = "3") Integer limit,
                                                    @RequestParam Integer size,
-                                                   @RequestParam Integer page) {
-        PageRequest of = PageRequest.of(page, size);
+                                                   @RequestParam Integer page,
+                                                   @RequestParam(required = false, defaultValue = "age") String sort,
+                                                   @RequestParam(required = false, defaultValue = "DESC") String direction) {
+
+        Sort sortBy = Sort.by(Sort.Direction.fromString(direction), sort);
+        PageRequest of = PageRequest.of(page, size, sortBy);
         return ResponseEntity.ok().body(animalService.listOfAnimals(of));
     }
 
