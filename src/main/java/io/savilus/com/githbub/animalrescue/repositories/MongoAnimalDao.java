@@ -1,36 +1,40 @@
 package io.savilus.com.githbub.animalrescue.repositories;
 
 import io.savilus.com.githbub.animalrescue.domain.Animal;
+import lombok.Value;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Repository
-public class InMemoryAnimalRepository implements AnimalsRepository{
+@Primary
+public class MongoAnimalDao implements AnimalsDao{
 
-    private final Map<String, Animal> animals = new HashMap<>();
+    private final AnimalsRepository animalsRepository;
 
-
+    public MongoAnimalDao(AnimalsRepository animalsRepository) {
+        this.animalsRepository = animalsRepository;
+    }
 
     @Override
     public void saveAnimal(Animal animal) {
-        animals.put(animal.getId(), animal);
+        animalsRepository.save(animal);
     }
 
     @Override
     public Animal findAnimal(String id) {
-        return animals.get(id);
+        return animalsRepository.findAnimalById(id);
+
     }
 
     @Override
     public List<Animal> findAllAnimals(Integer limit) {
-        return animals.values().stream().limit(limit.longValue()).toList();
+        return null;
     }
 
     @Override
     public void deleteAnimal(String id) {
-        animals.remove(id);
+
     }
 }

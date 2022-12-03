@@ -1,7 +1,7 @@
 package io.savilus.com.githbub.animalrescue.infastructure;
 
 import io.savilus.com.githbub.animalrescue.domain.*;
-import io.savilus.com.githbub.animalrescue.repositories.AnimalsRepository;
+import io.savilus.com.githbub.animalrescue.repositories.AnimalsDao;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -14,9 +14,9 @@ import java.util.UUID;
 @Profile(value = "profileTwo")
 public class DefaultAnimalServiceCopy implements AnimalService {
 
-    private final AnimalsRepository animalsRepository;
+    private final AnimalsDao animalsRepository;
 
-    public DefaultAnimalServiceCopy(AnimalsRepository animalsRepository) {
+    public DefaultAnimalServiceCopy(AnimalsDao animalsRepository) {
         this.animalsRepository = animalsRepository;
     }
 

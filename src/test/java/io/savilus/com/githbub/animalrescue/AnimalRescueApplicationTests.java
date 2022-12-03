@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -68,7 +67,7 @@ class AnimalRescueApplicationTests {
         HttpEntity<String> stringHttpEntity = new HttpEntity<>(animalBody, httpHeaders);
         String createAnimalEndpoint = "/animals/dogs";
         String getDogUrl;
-        Integer expecterDogAge = 10;
+        Integer expectedDogAge = 10;
         Specie expectedSpecie = Specie.DOG;
         HttpStatus expectedStatusCode = HttpStatus.CREATED;
 
@@ -82,7 +81,7 @@ class AnimalRescueApplicationTests {
         //dog created
         assertThat(addDog.getStatusCode().is2xxSuccessful()).isTrue();
         assertThat(allDogsEntity.getStatusCode().is2xxSuccessful()).isTrue();
-        assertThat(allDogsEntity.getBody().getAge()).isEqualTo(expecterDogAge);
+        assertThat(allDogsEntity.getBody().getAge()).isEqualTo(expectedDogAge);
         assertThat(allDogsEntity.getBody().getSpecie()).isEqualTo(expectedSpecie);
 
     }

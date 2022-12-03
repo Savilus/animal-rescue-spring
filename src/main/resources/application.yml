@@ -1,12 +1,12 @@
 server:
+
   port: 8080
-
-spring:
-  mongodb:
-    embedded:
-      version: "4.0.21"
-
   main:
     banner-mode: off
 
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://jakub:hbXj18KakAwk68E4@sda-training.lg7ohbe.mongodb.net/?retryWrites=true&w=majority
+      database: sda_training
 
