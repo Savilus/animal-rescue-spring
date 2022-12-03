@@ -1,12 +1,21 @@
 server:
+ port: 8080
 
-  port: 8080
-  main:
-    banner-mode: off
+main:
+  banner-mode: off
 
 spring:
   data:
     mongodb:
       uri: mongodb+srv://jakub:hbXj18KakAwk68E4@sda-training.lg7ohbe.mongodb.net/?retryWrites=true&w=majority
       database: sda_training
+
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb:
+            core:
+              MongoTemplate: debug
 

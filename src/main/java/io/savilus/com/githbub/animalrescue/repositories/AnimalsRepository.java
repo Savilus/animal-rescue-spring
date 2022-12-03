@@ -8,5 +8,7 @@ import org.springframework.stereotype.Repository;
 public interface AnimalsRepository extends MongoRepository<Animal, String> {
 
     Animal findAnimalById(String id);
-    Animal findAnimalByName(String name);
+    void deleteById(String id);
+
+
 }

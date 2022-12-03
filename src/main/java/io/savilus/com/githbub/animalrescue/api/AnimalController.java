@@ -3,12 +3,13 @@ package io.savilus.com.githbub.animalrescue.api;
 import io.savilus.com.githbub.animalrescue.api.dto.AllAnimalsResponse;
 import io.savilus.com.githbub.animalrescue.api.dto.CreateAnimalRequest;
 import io.savilus.com.githbub.animalrescue.api.dto.ErrorDto;
-import io.savilus.com.githbub.animalrescue.api.dto.SingleAnimalResponse;
 import io.savilus.com.githbub.animalrescue.domain.Animal;
 import io.savilus.com.githbub.animalrescue.domain.Specie;
 import io.savilus.com.githbub.animalrescue.infastructure.AnimalService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -33,18 +34,22 @@ public class AnimalController {
     private final AnimalService animalService;
 
     @GetMapping(path = "/animals")
-    public AllAnimalsResponse getAnimals(@RequestParam(required = false, defaultValue = "3") Integer limit) {
-        AllAnimalsResponse animalsResponse = new AllAnimalsResponse(
-                animalService.listOfAnimals(limit));
-        return animalsResponse;
+    public ResponseEntity<Page<Animal>> getAnimals(@RequestParam(required = false, defaultValue = "3") Integer limit,
+                                                   @RequestParam Integer size,
+                                                   @RequestParam Integer page) {
+        PageRequest of = PageRequest.of(page, size);
+        return ResponseEntity.ok().body(animalService.listOfAnimals(of));
     }
 
     @GetMapping(path = "/animals/{id}")
-    public SingleAnimalResponse getById(@PathVariable String id) {
+    public ResponseEntity<Animal> getById(@PathVariable String id) {
         log.info(id);
-        return new SingleAnimalResponse(
-                animalService.singleAnimal(id).getAge(),
-                animalService.singleAnimal(id).getSpecie());
+        Animal singleAnimal = animalService.singleAnimal(id);
+        if(singleAnimal == null){
+            return ResponseEntity.notFound().build();
+        }else {
+            return ResponseEntity.ok(singleAnimal);
+        }
     }
 
     @PostMapping(path = "/animals/{specie}") // pobieramy z frontu i tworzymy zasoby

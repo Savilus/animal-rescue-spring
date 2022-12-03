@@ -3,6 +3,8 @@ package io.savilus.com.githbub.animalrescue.repositories;
 import io.savilus.com.githbub.animalrescue.domain.Animal;
 import lombok.Value;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -30,11 +32,16 @@ public class MongoAnimalDao implements AnimalsDao{
 
     @Override
     public List<Animal> findAllAnimals(Integer limit) {
-        return null;
+        return animalsRepository.findAll();
     }
 
     @Override
     public void deleteAnimal(String id) {
+        animalsRepository.deleteById(id);
+    }
 
+    @Override
+    public Page<Animal> findAnimals(Pageable pageable) {
+       return animalsRepository.findAll(pageable);
     }
 }
