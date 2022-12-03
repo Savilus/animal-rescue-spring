@@ -39,11 +39,13 @@ public class AnimalController {
                                                    @RequestParam Integer size,
                                                    @RequestParam Integer page,
                                                    @RequestParam(required = false, defaultValue = "age") String sort,
-                                                   @RequestParam(required = false, defaultValue = "DESC") String direction) {
-
+                                                   @RequestParam(required = false, defaultValue = "DESC") String direction,
+                                                   @RequestHeader(name = "sda-header") String sdaHeader) {
+        log.info(sdaHeader);
         Sort sortBy = Sort.by(Sort.Direction.fromString(direction), sort);
         PageRequest of = PageRequest.of(page, size, sortBy);
-        return ResponseEntity.ok().body(animalService.listOfAnimals(of));
+        // są też HttpHeader i ContentType
+        return ResponseEntity.ok().header("sda-header", sdaHeader).body(animalService.listOfAnimals(of));
     }
 
     @GetMapping(path = "/animals/{id}")
